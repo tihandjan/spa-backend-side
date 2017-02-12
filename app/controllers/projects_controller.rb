@@ -3,7 +3,7 @@ class ProjectsController < ApplicationController
 
   # GET /projects
   def index
-    @projects = Project.all
+    @projects = Project.order(created_at: :desc)
 
     render json: @projects
   end
@@ -41,7 +41,7 @@ class ProjectsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project
-      @project = Project.find(params[:id])
+      @project = Project.where("lower(title) = ?", (params[:id]).split('-').join(' ')).first
     end
 
     # Only allow a trusted parameter "white list" through.
