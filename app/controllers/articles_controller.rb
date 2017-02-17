@@ -16,8 +16,8 @@ class ArticlesController < ApplicationController
   # POST /articles
   def create
     @article = Article.new(article_params)
-
     if @article.save
+      @article.pictures.create
       render json: @article, status: :created, location: @article
     else
       render json: @article.errors, status: :unprocessable_entity
@@ -46,6 +46,6 @@ class ArticlesController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def article_params
-      params.require(:article).permit(:file, :title, :summary, :description, :image, :technology)
+      params.require(:article).permit(:title, :summary, :description, :image, :technology)
     end
 end
