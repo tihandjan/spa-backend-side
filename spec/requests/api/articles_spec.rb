@@ -4,7 +4,7 @@ RSpec.describe "Articles API", type: :request do
     let!(:article) { FactoryGirl.create_list(:article, 3) }
     
     it 'sends public articles' do
-        get '/api/articles', nil, { 'Content-type': 'application/json' }
+        get '/articles', nil, { 'Content-type': 'application/json' }
 
         expect(response.status).to eq(200)
 
@@ -13,9 +13,19 @@ RSpec.describe "Articles API", type: :request do
     end
 
     it 'sends particular article' do
-        get "/api/articles/#{article.first.id}", nil, { 'Content-type': 'application/json' }
+        get "/articles/#{article.first.id}", nil, { 'Content-type': 'application/json' }
 
         expect(response.status).to eq(200)
         expect(json['title']).to eq(article.first.title)
+    end
+end
+
+describe "receives POST request with body", :type => :request do
+    it 'sfvd' do
+        params = {:article => {:title => "tested"}}
+        post '/articles', params.to_json, { 'Content-type': 'application/json' }
+
+        expect(json['title']).to eq('tested')
+        expect(response.status).to eq(201)
     end
 end
