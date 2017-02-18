@@ -18,14 +18,27 @@ RSpec.describe "Articles API", type: :request do
         expect(response.status).to eq(200)
         expect(json['title']).to eq(article.first.title)
     end
-end
 
-describe "receives POST request with body", :type => :request do
-    it 'sfvd' do
-        params = {:article => {:title => "tested"}}
+    it 'create new article' do
+        params = {article: {title: "tested", summary: 'summary', description: 'description'}}
         post '/articles', params.to_json, { 'Content-type': 'application/json' }
 
         expect(json['title']).to eq('tested')
         expect(response.status).to eq(201)
+    end
+
+    it 'edit article' do
+        params = {article: {title: "edited", summary: 'summary', description: 'description'}}
+        patch "/articles/#{article.first.id}", params.to_json, { 'Content-type': 'application/json' }
+
+        expect(response.status).to eq(200)
+        expect(json['title']).to eq('edited')
+    end
+
+    it 'delete article' do
+        delete "/articles/#{article.last.id}", nil, { 'Content-type': 'application/json' }
+
+        expect(response.status).to eq(204)
+        expect(Article.exists?(article.last)).to be_falsy
     end
 end

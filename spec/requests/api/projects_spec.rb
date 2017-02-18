@@ -20,10 +20,25 @@ RSpec.describe 'Projects API', type: :request do
     end
 
     it 'create new project' do
-        params = {project: { title: 'project title' }}
+        params = {project: {title: "tested", summary: 'summary', description: 'description'}}
         post '/projects', params.to_json, { 'Content-type': 'application/json' }
 
         expect(response.status).to eq(201)
-        expect(json['title']).to eq('project title')
+        expect(json['title']).to eq('tested')
+    end
+
+    it 'edit project' do
+        params = {project: {title: "edited", summary: 'summary', description: 'description'}}
+        patch "/projects/#{project.first.id}", params.to_json, { 'Content-type': 'application/json' }
+
+        expect(response.status).to eq(200)
+        expect(json['title']).to eq('edited')
+    end
+
+    it 'delete project' do
+        delete "/projects/#{project.last.id}", nil, { 'Content-type': 'application/json' }
+
+        expect(response.status).to eq(204)
+        expect(Project.exists?(project.last)).to be_falsy
     end
 end
